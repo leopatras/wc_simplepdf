@@ -1,10 +1,11 @@
 IMPORT os
+DEFINE m_viaGAS BOOLEAN
+DEFINE m_URL STRING
 MAIN
   DEFINE parent,url,pdf STRING
   OPEN FORM f FROM "img"
   DISPLAY FORM f
-  CALL ui.interface.frontcall(
-      "webcomponent", "call", ["formonly.imgh", "getUrl"], [url])
+  LET m_viaGAS=fgl_getenv("FGL_WEBSERVER_HTTP_USER_AGENT") IS NOT NULL
   CALL displayPDFUrlBased(url,"hello.pdf")
   --DISPLAY getUrl("hello.pdf") TO img
   MENU
@@ -31,14 +32,24 @@ END MAIN
 
 FUNCTION displayPDFUrlBased(url STRING,basename STRING)
   DEFINE parent,pdf STRING
-  --ugly: we need the url of a hidden webco
-  --and then move the asset to the location of the hidden webco
-  LET parent=os.Path.dirName(url)
-  LET pdf=parent,"/",basename
-  IF NOT os.Path.copy(basename,"webcomponents/img/"||basename) THEN
-    CALL myerr(sfmt("Can't copy asset %1 to webcomponents/img",basename))
+  DISPLAY basename TO file
+  IF m_viaGAS THEN
+    LET pdf=ui.Interface.filenameToURI(basename)
+  ELSE
+    IF m_URL IS NULL THEN
+       CALL ui.interface.frontcall(
+      "webcomponent", "call", ["formonly.imgh", "getUrl"], [m_URL])
+    END IF
+    --ugly: we need the url of a hidden webco
+    --and then move the asset to the location of the hidden webco
+    LET parent=os.Path.dirName(m_URL)
+    LET pdf=parent,"/",basename
+    IF NOT os.Path.copy(basename,"webcomponents/img/"||basename) THEN
+      CALL myerr(sfmt("Can't copy asset %1 to webcomponents/img",basename))
+    END IF
   END IF
   DISPLAY "pdf:",pdf
+  DISPLAY pdf TO url
   DISPLAY pdf TO imgu
 END FUNCTION
 
