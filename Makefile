@@ -23,5 +23,5 @@ gdcwebrun: all fglwebrun
 	GDC=1 fglwebrun/fglwebrun img
 
 clean:
-	rm -f *.42?
+	rm -f *.42? webcomponents/img/*.pdf
 	rm -rf fglwebrun

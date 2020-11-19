@@ -10,3 +10,7 @@ onICHostReady = function(version) {
    gICAPI.onProperty = function(p) {
    }
 }
+
+function getUrl() {
+  return window.location.href;
+}

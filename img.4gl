@@ -1,11 +1,18 @@
 IMPORT os
 MAIN
+  DEFINE parent,url,pdf STRING
   OPEN FORM f FROM "img"
   DISPLAY FORM f
-  DISPLAY getUrl("hello.pdf") TO img
+  CALL ui.interface.frontcall(
+      "webcomponent", "call", ["formonly.imgh", "getUrl"], [url])
+  CALL displayPDFUrlBased(url,"hello.pdf")
+  --DISPLAY getUrl("hello.pdf") TO img
   MENU
     ON ACTION sample2pages ATTRIBUTE(TEXT="2 Pages")
-      DISPLAY getUrl("sample.pdf") TO img
+      CALL displayPDFUrlBased(url,"sample.pdf")
+    ON ACTION hello ATTRIBUTE(TEXT="Hello")
+      CALL displayPDFUrlBased(url,"hello.pdf")
+      --DISPLAY getUrl("sample.pdf") TO img
     ON ACTION showenv ATTRIBUTE(TEXT = "Show FGL env")
       ERROR "FGL_PUBLIC_DIR:",
         fgl_getenv("FGL_PUBLIC_DIR"),
@@ -21,6 +28,19 @@ MAIN
       EXIT MENU
   END MENU
 END MAIN
+
+FUNCTION displayPDFUrlBased(url STRING,basename STRING)
+  DEFINE parent,pdf STRING
+  --ugly: we need the url of a hidden webco
+  --and then move the asset to the location of the hidden webco
+  LET parent=os.Path.dirName(url)
+  LET pdf=parent,"/",basename
+  IF NOT os.Path.copy(basename,"webcomponents/img/"||basename) THEN
+    CALL myerr(sfmt("Can't copy asset %1 to webcomponents/img",basename))
+  END IF
+  DISPLAY "pdf:",pdf
+  DISPLAY pdf TO imgu
+END FUNCTION
 
 FUNCTION getUrl(fname STRING)
   DEFINE url STRING

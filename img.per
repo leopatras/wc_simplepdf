@@ -8,7 +8,7 @@ Input of filenameToURI()
 [nameToUrl                                              ]
 Resulting URI
 [url                                                    ]
-[img                                                    ]
+[imgu                                                   ]
 [                                                       ]
 [                                                       ]
 [                                                       ]
@@ -19,9 +19,11 @@ Resulting URI
 [                                                       ]
 [                                                       ]
 [                                                       ]
+[imgh                                                   ]
 }
 END
 ATTRIBUTES
 nameToUrl=FORMONLY.nameToUrl;
 url=FORMONLY.url;
-WEBCOMPONENT img=FORMONLY.img, COMPONENTTYPE = "img",SIZEPOLICY=FIXED,STRETCH=BOTH;
+WEBCOMPONENT imgu=FORMONLY.imgu,SIZEPOLICY=FIXED,STRETCH=BOTH;--url based
+WEBCOMPONENT imgh=FORMONLY.imgh, COMPONENTTYPE = "img",SIZEPOLICY=FIXED,STRETCH=BOTH , HIDDEN;
