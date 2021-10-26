@@ -33,12 +33,14 @@ END MAIN
 FUNCTION displayPDFUrlBased(url STRING,basename STRING)
   DEFINE parent,pdf STRING
   DISPLAY basename TO file
-  IF m_viaGAS THEN
+  --IF m_viaGAS THEN
     LET pdf=ui.Interface.filenameToURI(basename)
+  {
   ELSE
     IF m_URL IS NULL THEN
        CALL ui.interface.frontcall(
       "webcomponent", "call", ["formonly.imgh", "getUrl"], [m_URL])
+      DISPLAY "m_URL:",m_URL
     END IF
     --ugly: we need the url of a hidden webco
     --and then move the asset to the location of the hidden webco
@@ -47,7 +49,9 @@ FUNCTION displayPDFUrlBased(url STRING,basename STRING)
     IF NOT os.Path.copy(basename,"webcomponents/img/"||basename) THEN
       CALL myerr(sfmt("Can't copy asset %1 to webcomponents/img",basename))
     END IF
+    LET pdf=ui.Interface.filenameToURI(basename)
   END IF
+  }
   DISPLAY "pdf:",pdf
   DISPLAY pdf TO url
   DISPLAY pdf TO imgu
