@@ -2,7 +2,7 @@
 	fglform -M $<
 
 %.42m: %.4gl 
-	fglcomp -M $*
+	fglcomp -Wall -M $*
 
 
 MODS=$(patsubst %.4gl,%.42m,$(wildcard *.4gl))
@@ -22,6 +22,9 @@ webrun: all fglwebrun
 gdcwebrun: all fglwebrun
 	GDC=1 fglwebrun/fglwebrun img
 
+gwa.run: all
+	gwarun img
+
 clean:
 	rm -f *.42? webcomponents/img/*.pdf
-	rm -rf fglwebrun
+	rm -rf fglwebrun gwa_dist
